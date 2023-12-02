@@ -28,7 +28,17 @@ def two() -> int:
     For each game, find the minimum set of cubes that must have been present.
     What is the sum of the power of these sets?
     """
-    pass
+    total = 0
+    for i, game in enumerate(data):
+        n_red, n_green, n_blue = 0, 0, 0
+        for cube_set in game.split(': ')[1].split(';'):
+            for cube_color in cube_set.split(','):
+                match cube_color.split():
+                    case [n, "red"]: n_red = int(n) if int(n) > n_red else n_red
+                    case [n, "green"]:  n_green = int(n) if int(n) > n_green else n_green
+                    case [n, "blue"]:  n_blue = int(n) if int(n) > n_blue else n_blue
+        total += n_red * n_green * n_blue
+    return total
 
 
 print(f"1. {one()}")
