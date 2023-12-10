@@ -36,4 +36,9 @@ def one() -> int:
     return total
 
 
+def two() -> int:
+    pass
+
+
 print(f"1. {one()}")
+print(f"2. {two()}")
