@@ -1,3 +1,6 @@
+import numpy as np
+from shapely import Polygon, MultiPoint
+
 from get_day_input import get_input
 
 
@@ -11,15 +14,20 @@ def _find_start() -> tuple[int, int]:
                 return i, j
 
 
-def one() -> int:
-    """
-    Find the single giant loop starting at S. How many steps along the loop does it take to get from the starting
-    position to the point farthest from the starting position?
-    """
-    i, j = _find_start()
+def _find_polygon_coords(outer_coords: list[tuple[int, int]]) -> list[tuple[int, int]]:
+    p = Polygon(outer_coords)
+    x_min, y_min, x_max, y_max = p.bounds
+    x = np.arange(np.floor(x_min), np.ceil(x_max) + 1)
+    y = np.arange(np.floor(y_min), np.ceil(y_max) + 1)
+    points = MultiPoint(np.transpose([np.tile(x, len(y)), np.repeat(y, len(x))]))
+    return [(pt.x, pt.y) for pt in points.intersection(p).geoms]
+
+
+def _find_loop_coordinates(start_i, start_j) -> list[tuple[int, int]]:
+    i, j = start_i, start_j
     location = data[i][j]
     direction = ""
-    steps = 0
+    coordinates = []
     while True:
         match location:
             case "|":
@@ -67,15 +75,30 @@ def one() -> int:
                     direction = "right"
                 # Finish
                 else:
-                    return int(steps / 2)
+                    return coordinates
         location = data[i][j]
-        steps += 1
+        coordinates.append((i, j))
+
+
+def one() -> int:
+    """
+    Find the single giant loop starting at S. How many steps along the loop does it take to get from the starting
+    position to the point farthest from the starting position?
+    """
+    i, j = _find_start()
+    loop_coordinates = _find_loop_coordinates(i, j)
+    return int(len(loop_coordinates) / 2)
 
 
 def two() -> int:
     """
+    Figure out whether you have time to search for the nest by calculating the area within the loop.
+    How many tiles are enclosed by the loop?
     """
-    return 0
+    i, j = _find_start()
+    loop_coordinates = _find_loop_coordinates(i, j)
+    all_coordinates = _find_polygon_coords(loop_coordinates)
+    return len(all_coordinates) - len(loop_coordinates)
 
 
 print(f"1. {one()}")
