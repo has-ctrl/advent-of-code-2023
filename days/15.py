@@ -25,6 +25,8 @@ def one() -> int:
 
 def two() -> int:
     """
+    With the help of an over-enthusiastic reindeer in a hard hat, follow the initialization sequence.
+    What is the focusing power of the resulting lens configuration?
     """
     boxes = {i: {} for i in range(256)}
     for s in data[0].split(','):
