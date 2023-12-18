@@ -69,6 +69,8 @@ def one(start_x: int = 0, start_y: int = 0, start_d: str = "right") -> int:
 
 def two() -> int:
     """
+    Directing the crucible from the lava pool to the machine parts factory, but not moving more than three consecutive
+    blocks in the same direction, what is the least heat loss it can incur?
     """
     min_x, min_y = 0, 0
     max_x, max_y = len(data[0]) - 1, len(data) - 1
